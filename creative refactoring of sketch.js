@@ -1,15 +1,16 @@
 //Defining variables
 let board = [
-  ['', '', ''],
-  ['', '', ''],
-  ['', '', '']
+  ["", "", ""],
+  ["", "", ""],
+  ["", "", ""]
 ];
-let auto = false;
-let manual = false;
-let winner = null;
 
-//Defines the two player options
-let players = ['X', 'O'];
+let auto = false;
+let manual = false; 
+let winner = null; 
+
+//Defines the two player optiins
+let players = ["X", "O"];
 
 //Defines variables used to fill the board
 let currentPlayer;
@@ -22,18 +23,18 @@ function setup() {
   
   //Creates a checkbox to select each option
   createCheckbox("AI Plays Against You", false).changed(function(){
-      auto = this.checked();
+    auto = this.checked();
   });
   
   createCheckbox("You play", false).changed(function(){
-      manual = this.checked();
+    manual = this.checked();
   });
   
   //Randomly picks between player 1 & 2
   currentPlayer = floor(random(players.length));
-
+  
   //Makes every pair for the grid available
-  for (let j = 0; j < 3; j++) {
+  for (let j = 0; j < 3; j++){
     for (let i = 0; i < 3; i++) {
       available.push([i, j]);
     }
@@ -41,14 +42,12 @@ function setup() {
 }
 
 //Function that is called within the checkWinner function to determine if the given spots on the board are equal
-function equals3(a, b, c) {
-  return a == b && b == c && a != '';
+function equals3(a, b, c){
+   return a == b && b == c && a != ""; 
 }
 
 //Function that checks to see if either side has won the game
-function checkWinner() {
-  let winner = null;
-
+function checkWinner(){
   //Checks the horizontal win scenarios
   for (let i = 0; i < 3; i++) {
     if (equals3(board[i][0], board[i][1], board[i][2])) {
@@ -65,11 +64,10 @@ function checkWinner() {
 
   //Checks the diagonal win scenarios
   if (equals3(board[0][0], board[1][1], board[2][2])) {
-      winner = board[0][0];
+    winner = board[0][0];
   }
-  
   if (equals3(board[2][0], board[1][1], board[0][2])) {
-        winner = board[2][0];
+    winner = board[2][0];
   }
 
   //Checks for a tie scenario
@@ -81,11 +79,11 @@ function checkWinner() {
 }
 
 //Function for where the manual player picks
-function mouseClicked() {
-    //If the player is clicking off of the board
-    if (winner != null || mouseY > width || mouseX > height ) {
-        return null;
-    }
+function mouseClicked(){
+  
+  if(winner != null || mouseY > width || mouseX > height){
+     return null; 
+  }
 
     //Base variables
     let x = 2;
@@ -133,62 +131,65 @@ function mouseClicked() {
     if (!manual && winner == null) {
         nextTurn();
         checkWinner();
-    }
-}
+    }  
+};
 
 
 //Function that does a turn for the AI
-function nextTurn() {
-  let index = floor(random(available.length));
-  let spot = available.splice(index, 1)[0];
-  let x = spot[0];
-  let y = spot[1];
-  board[x][y] = players[currentPlayer];
-  currentPlayer = (currentPlayer + 1) % players.length;
+function nextTurn(){
+   let index = floor(random(available.length));
+   let spot = available.splice(index, 1)[0];
+   let i = spot[0];
+   let j = spot[1];
+   board[i][j] = players[currentPlayer];
+   currentPlayer = (currentPlayer + 1) % players.length;
 }
 
 
 //Function that displays the board on the screen
 function draw() {
-  background(255,210,122);
+  background(220, 120, 210);
   let w = width / 3;
   let h = height / 3;
   strokeWeight(4);
-
+  
   //Displays grid
   line(w, 0, w, height);
   line(w * 2, 0, w * 2, height);
   line(0, h, width, h);
   line(0, h * 2, width, h * 2);
-
+  
   //Displays X/O
   for (let j = 0; j < 3; j++) {
-    for (let i = 0; i < 3; i++) {
-      let x = w * i + w / 2;
-      let y = h * j + h / 2;
-      let spot = board[i][j];
-      textSize(32);
-      let r = w / 4;
-      if (spot == players[1]) {
-        noFill();
-        ellipse(x, y, r * 2);
-      } else if (spot == players[0]) {
-        line(x - r, y - r, x + r, y + r);
-        line(x + r, y - r, x - r, y + r);
-      }
+  for (let i = 0; i < 3; i++) {
+    let x = w * i + w / 2;
+    let y = h * j + h / 2;
+    let spot = board[i][j];
+    textSize(32);
+    let r = w / 4;
+      
+    if (spot == players[1]) {
+      noFill();
+      ellipse(x, y, r * 2);
+    } else if (spot == players[0]) {
+      line(x - r, y - r, x + r, y + r);
+      line(x + r, y - r, x - r, y + r);
     }
   }
-
+  }
+  
   //Checks and runs the functions to check for an outcome
   let result = checkWinner();
-  if (result != null) {
-    noLoop();
-    let resultP = createP('');
-    resultP.style('font-size', '32pt');
-    if (result == 'tie') {
-      resultP.html('Tie!');
+  if(result != null) {
+     noLoop() ;
+    let resultP = createP("");
+    resultP.style("font-size", "32pt");
+    
+    if(result == "tie"){
+       resultP.html("It was a tie!"); 
     } else {
-      resultP.html(`${result} wins!`);
-    } 
-  }
+       resultP.html(`${result} wins!`);
+    }
+  } 
+  
 }
